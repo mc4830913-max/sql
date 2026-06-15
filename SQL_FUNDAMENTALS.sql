@@ -1,3 +1,5 @@
+----data retrivel 
+
 use newschema;
 select * from clean_olist_order_payment_dataset;
 select order_id,payment_value  from  clean_olist_order_payment_dataset;
