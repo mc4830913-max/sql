@@ -57,6 +57,23 @@ select count(distinct(brand_name)) from data;
 
 ---------------------------------------------------------------------------
 
+use myntra;
+select * from data;
+
+-- basic query:to find the avg rating of products
+select avg(rating) as "avg_rating" from data;
+
+-- subquery with where clause: find the brand name whose avg rating more then all avg ratings 
+select brand_name from data 
+where rating> (select avg(rating) as "avg_rating" from data);
+
+-- subquery in select clause: retrive the product name along with the avg rating of the products 
+select product_name,rating, 
+(select avg(rating) from data) from data;
+
+-- subquery with multiple results: find the total rating clount of products for each brand comparedto the allover average ratring 
+select brand_name,(select sum(rating)  from data where brand_name=p.brand_name) as total_rating_count 
+from (select distinct brand_name from data) as p;
 
  
  
