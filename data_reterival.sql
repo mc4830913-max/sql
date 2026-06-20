@@ -75,6 +75,154 @@ select product_name,rating,
 select brand_name,(select sum(rating)  from data where brand_name=p.brand_name) as total_rating_count 
 from (select distinct brand_name from data) as p;
 
+------------------------------------------------------------------------------
+-- join in sql 
+use data1;
+
+select * from student;
+select * from default_table;
+
+-- inner join 
+select * from student  as s
+inner join default_table as d
+on s.roll_no=d.roll_no;
+
+-- left join 
+select * from student  as s
+left join default_table as d
+on s.roll_no=d.roll_no;
+
+
+-- right join 
+select * from student  as s
+right join default_table as d
+on s.roll_no=d.roll_no;
+
+-- cross inner join
+select * from student  as s
+left join default_table as d
+on s.roll_no=d.roll_no
+union
+select * from student  as s
+right join default_table as d
+on s.roll_no=d.roll_no;
+
+
+------------------------------------------------------
+-- set operators 
+use data1;
+
+select * from student;
+select * from default_table;
+
+-- union |remove duplicated
+select roll_no  from student union
+select roll_no from default_table;
+
+-- union all |donnot remove duplicate 
+select roll_no  from student union all
+select roll_no from default_table;
+
+-- except |show the dominanating table that not is there in  other table 
+select first_name from student except
+select name from default_table;
+
+-- intersection 
+select roll_no  from student intersect
+select roll_no from default_table;
+
+---------------------------------------------------------------------------------
+use data1;
+
+CREATE TABLE IF NOT EXISTS users_2021  (UserID INT PRIMARY KEY, Name VARCHAR(50));
+CREATE TABLE IF NOT EXISTS users_2022  (UserID INT PRIMARY KEY, Name VARCHAR(50));
+CREATE TABLE IF NOT EXISTS users_2023  (UserID INT PRIMARY KEY, Name VARCHAR(50));
+
+INSERT INTO users_2021 (UserID, Name) VALUES (1, 'Ashish'), (2, 'Laura'), (7, 'Prakash');
+INSERT INTO users_2022 (UserID, Name) VALUES (1, 'Ashish'), (2, 'Laura'), (3, 'Charlie'), (4, 'Grace');
+INSERT INTO users_2023 (UserID, Name) VALUES (1, 'Ashish'), (2, 'Laura'), (3, 'Charlie'), (4, 'Grace'), (5, 'Henry');
+
+select * from users_2021;
+select * from users_2022;
+select * from users_2023;
+
+-- 1. List the new users added in 2022
+select * from users_2022 as t_22
+except select * from users_2021 as t_21
+
+-- 2. List the new users added in 2023
+select * from users_2023 as t_23
+except select * from users_2022 as t_22
+
+
+-- 3. List the users who left us
+select * from users_2021 as t_21
+except select * from users_2022 as t_22 except select * from users_2023 as t_23;
+
+-- 4. List all the users that are there throughout the database for year 2021 & 2022
+select * from users_2021 as t_21
+union select * from users_2022 as t_22 ;
+
+-- 5. List all the users that are there throughout the database
+select * from users_2021 as t_21
+union  select * from users_2022 as t_22 union select * from users_2023 as t_23;
+
+-- 6. List the users that are there with us from last 3 years
+select * from users_2021 as t_21
+intersect select * from users_2022 as t_22 intersect select * from users_2023 as t_23;
+
+-- 7. List the all the users except that users who are there with us from 3 years
+(select * from users_2021 as t_21
+union select * from users_2022 as t_22 union select * from users_2023 as t_23)
+ except 
+ select * from users_2021 as t_21
+intersect select * from users_2022 as t_22 intersect select * from users_2023 as t_23;
+
+-- 8. Operators with Join
+select * from users_2021 as t_21
+left join users_2022 as t_22
+on t_21.USERID=t_22.USERID
+except
+select * from users_2021 as t_21
+right join users_2022 as t_22
+on t_21.USERID=t_22.USERID;
+
+select * from users_2021 as t_21
+left join users_2022 as t_22
+on t_21.USERID=t_22.USERID
+union
+select * from users_2021 as t_21
+right join users_2022 as t_22
+on t_21.USERID=t_22.USERID;
+
+select * from users_2021 as t_21
+left join users_2022 as t_22
+on t_21.USERID=t_22.USERID
+intersect
+select * from users_2021 as t_21
+right join users_2022 as t_22
+on t_21.USERID=t_22.USERID;
+
+-- showing valuse that are not common in two table 
+(select * from users_2021 as t_21
+left join users_2022 as t_22
+on t_21.USERID=t_22.USERID
+union
+select * from users_2021 as t_21
+right join users_2022 as t_22
+on t_21.USERID=t_22.USERID)
+except
+(select * from users_2021 as t_21
+left join users_2022 as t_22
+on t_21.USERID=t_22.USERID
+intersect
+select * from users_2021 as t_21
+right join users_2022 as t_22
+on t_21.USERID=t_22.USERID);
+
+-----------------------------------------------------------------------------------
+
+
  
  
  
